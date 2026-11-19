@@ -104,7 +104,11 @@ class KeuanganController extends Controller
         // Jika disetujui & dicairkan
         $buktiPath = null;
         if ($request->hasFile('bukti_transfer')) {
-            $buktiPath = $request->file('bukti_transfer')->store('bukti_transfer', 'public');
+            try {
+                $buktiPath = $request->file('bukti_transfer')->store('bukti_transfer', 'public');
+            } catch (\Throwable $e) {
+                $buktiPath = null;
+            }
         }
 
         $penarikan->update([

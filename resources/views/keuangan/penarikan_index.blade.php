@@ -320,10 +320,35 @@
                     <label class="block text-xs font-bold text-slate-700 uppercase mb-1">
                         Upload Bukti Transfer / Resi (Opsional)
                     </label>
-                    <input type="file" name="bukti_transfer" accept="image/*"
+                    <input type="file" name="bukti_transfer" id="inputBuktiTransfer" accept="image/*"
                         class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 border border-slate-200 rounded-xl p-1 cursor-pointer">
-                    <p class="text-[11px] text-slate-400 mt-1">
-                        Format JPG/PNG (M-Banking screenshot, resi DANA/Gopay). Jika dikosongkan, sistem otomatis membuat bukti transfer digital terverifikasi.
+                    
+                    {{-- Status Kompresi --}}
+                    <div id="compressStatus" class="mt-2 hidden">
+                        <div class="p-2.5 rounded-xl bg-amber-50 border border-amber-200 flex items-center gap-2 text-xs text-amber-800">
+                            <span class="animate-spin text-base">⏳</span>
+                            <span id="compressStatusText">Mengompresi foto bukti transfer agar ringan dan cepat...</span>
+                        </div>
+                    </div>
+
+                    {{-- Preview Thumbnail Hasil Kompresi --}}
+                    <div id="compressPreview" class="mt-2 hidden">
+                        <div class="p-2 rounded-xl border border-emerald-200 bg-emerald-50/60 flex items-center justify-between">
+                            <div class="flex items-center gap-2.5 min-w-0">
+                                <img id="imgThumbnail" src="" class="w-10 h-10 rounded-lg object-cover border border-emerald-300 flex-shrink-0 shadow-xs">
+                                <div class="min-w-0">
+                                    <p class="text-xs font-bold text-slate-800 truncate" id="compressFileName">-</p>
+                                    <p class="text-[11px] text-emerald-700 font-semibold" id="compressFileSize">-</p>
+                                </div>
+                            </div>
+                            <button type="button" onclick="removeSelectedFile()" class="text-rose-600 hover:text-rose-800 text-xs font-bold px-2 py-1 rounded-lg hover:bg-rose-50 transition">
+                                Hapus
+                            </button>
+                        </div>
+                    </div>
+
+                    <p class="text-[11px] text-slate-400 mt-1.5 leading-relaxed">
+                        Foto otomatis dikompresi menjadi ringan (&lt; 300 KB). Jika dikosongkan, sistem membuat stempel resi digital resmi otomatis.
                     </p>
                 </div>
 
@@ -490,6 +515,122 @@
             });
         });
 
+        // Client-side auto-compression for uploaded receipt image
+        const inputBukti = document.getElementById('inputBuktiTransfer');
+        let isCompressing = false;
+
+        inputBukti?.addEventListener('change', async function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            if (!file.type.startsWith('image/')) {
+                alert('Mohon pilih file gambar foto/screenshot (JPG, PNG).');
+                inputBukti.value = '';
+                return;
+            }
+
+            const statusEl = document.getElementById('compressStatus');
+            const previewEl = document.getElementById('compressPreview');
+            const statusText = document.getElementById('compressStatusText');
+            const btnSubmit = document.getElementById('btnSubmitCair');
+
+            statusEl.classList.remove('hidden');
+            previewEl.classList.add('hidden');
+            statusText.innerText = 'Mengompresi foto bukti transfer agar ringan dan cepat...';
+            btnSubmit.disabled = true;
+            isCompressing = true;
+
+            try {
+                const compressedFile = await compressImageFile(file, 1200, 1200, 0.75);
+                
+                // Pasang file terkompresi ke input menggunakan DataTransfer
+                const dt = new DataTransfer();
+                dt.items.add(compressedFile);
+                inputBukti.files = dt.files;
+
+                const origKB = Math.round(file.size / 1024);
+                const compKB = Math.round(compressedFile.size / 1024);
+
+                document.getElementById('compressFileName').innerText = compressedFile.name;
+                document.getElementById('compressFileSize').innerText = `Terkompresi: ${compKB} KB (Aman diupload, dari ${origKB} KB)`;
+                
+                const reader = new FileReader();
+                reader.onload = (re) => {
+                    document.getElementById('imgThumbnail').src = re.target.result;
+                    previewEl.classList.remove('hidden');
+                };
+                reader.readAsDataURL(compressedFile);
+
+            } catch (err) {
+                console.error('Gagal kompres:', err);
+            } finally {
+                statusEl.classList.add('hidden');
+                btnSubmit.disabled = false;
+                isCompressing = false;
+            }
+        });
+
+        function removeSelectedFile() {
+            if (inputBukti) inputBukti.value = '';
+            document.getElementById('compressPreview')?.classList.add('hidden');
+        }
+
+        function compressImageFile(file, maxWidth, maxHeight, quality) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.src = e.target.result;
+                    img.onload = () => {
+                        let w = img.width;
+                        let h = img.height;
+                        if (w > h) {
+                            if (w > maxWidth) {
+                                h = Math.round((h * maxWidth) / w);
+                                w = maxWidth;
+                            }
+                        } else {
+                            if (h > maxHeight) {
+                                w = Math.round((w * maxHeight) / h);
+                                h = maxHeight;
+                            }
+                        }
+                        const canvas = document.createElement('canvas');
+                        canvas.width = w;
+                        canvas.height = h;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, w, h);
+                        canvas.toBlob((blob) => {
+                            if (!blob) {
+                                resolve(file);
+                                return;
+                            }
+                            const newFile = new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".jpg", {
+                                type: 'image/jpeg',
+                                lastModified: Date.now()
+                            });
+                            resolve(newFile);
+                        }, 'image/jpeg', quality);
+                    };
+                    img.onerror = () => resolve(file);
+                };
+                reader.onerror = () => resolve(file);
+            });
+        }
+
+        // Form submit handler
+        document.getElementById('formProsesCairkan')?.addEventListener('submit', function(e) {
+            if (isCompressing) {
+                e.preventDefault();
+                alert('Mohon tunggu sejenak, foto sedang dioptimasi...');
+                return false;
+            }
+            const btn = document.getElementById('btnSubmitCair');
+            btn.disabled = true;
+            btn.innerHTML = '<span>⏳</span> Memproses Pencairan...';
+        });
+
         // Modal Cairkan
         function openCairkanModal(id, kode, nama, bank, norek, atasNama, nominal) {
             document.getElementById('formProsesCairkan').action = `/keuangan/penarikan-saldo/${id}/proses`;
@@ -499,6 +640,7 @@
             document.getElementById('cairNorek').innerText = norek;
             document.getElementById('cairAtasNama').innerText = atasNama;
             document.getElementById('cairNominal').innerText = 'Rp ' + Number(nominal).toLocaleString('id-ID');
+            removeSelectedFile();
             document.getElementById('modalCairkan').classList.remove('hidden');
         }
 
