@@ -41,6 +41,13 @@ class AuthController extends Controller
             $request->session()->regenerate();
             $user = Auth::user();
 
+            if ($user->status_akun === 'pending') {
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+                return back()->with('error', 'Akun Anda sedang menunggu persetujuan Admin. Harap bersabar, kami akan segera memproses pendaftaran Anda.');
+            }
+
             if ($user->status_akun === 'ditolak') {
                 Auth::logout();
                 $request->session()->invalidate();
@@ -79,14 +86,14 @@ class AuthController extends Controller
             'nama_lengkap' => ['required', 'string', 'max:150'],
             'email' => ['required', 'string', 'email', 'max:150', 'unique:users,email'],
             'no_hp' => ['nullable', 'string', 'max:20'],
-            'password' => ['required', 'string', 'min:6', 'confirmed'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
         ], [
             'nama_lengkap.required' => 'Nama pengguna / nama lengkap wajib diisi.',
             'email.required' => 'Alamat email wajib diisi.',
             'email.email' => 'Format email tidak valid.',
             'email.unique' => 'Email ini sudah terdaftar. Silakan gunakan email lain atau login.',
             'password.required' => 'Kata sandi wajib diisi.',
-            'password.min' => 'Kata sandi minimal terdiri dari 6 karakter.',
+            'password.min' => 'Kata sandi minimal terdiri dari 8 karakter.',
             'password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',
         ]);
 
@@ -96,15 +103,12 @@ class AuthController extends Controller
             'no_hp' => $validated['no_hp'] ?? null,
             'password' => Hash::make($validated['password']),
             'role' => 'nasabah',
-            'status_akun' => 'aktif', // Langsung aktif agar mudah saat live demo
+            'status_akun' => 'pending', // Menunggu persetujuan Admin
             'saldo' => 0.00,
             'total_berat_sampah' => 0.00,
         ]);
 
-        Auth::login($user);
-        $request->session()->regenerate();
-
-        return redirect()->route('nasabah.dashboard')->with('success', 'Pendaftaran berhasil! Selamat bergabung di Bank Sampah Bumi Sai Wawai.');
+        return redirect()->route('login')->with('success', 'Pendaftaran berhasil! Akun Anda sedang menunggu persetujuan Admin. Kami akan segera memprosesnya.');
     }
 
     /**
