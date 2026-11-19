@@ -35,6 +35,19 @@
                 </div>
             @endif
 
+            @if ($errors->any())
+                <div class="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-sm mb-6">
+                    <div class="font-bold flex items-center gap-1.5 mb-1.5">
+                        <span>⚠️</span><span>Mohon periksa input formulir:</span>
+                    </div>
+                    <ul class="list-disc list-inside text-xs space-y-1">
+                        @foreach ($errors->all() as $err)
+                            <li>{{ $err }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             {{-- Form Timbang Multi-Item --}}
             <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
                 <div class="flex items-center gap-3 mb-5">
@@ -48,14 +61,21 @@
                 <form method="POST" action="{{ route('admin.timbang.store') }}" id="formTimbang">
                     @csrf
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                         <div>
                             <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Pilih Nasabah <span class="text-rose-500">*</span></label>
                             <select name="id_user" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
                                 <option value="">-- Pilih Nasabah Terdaftar --</option>
                                 @foreach ($nasabahList as $n)
-                                    <option value="{{ $n->id_user }}">{{ $n->nama_lengkap }} (Rp {{ number_format($n->saldo, 0, ',', '.') }})</option>
+                                    <option value="{{ $n->id_user }}">{{ $n->nama_lengkap }} (Saldo: Rp {{ number_format($n->saldo, 0, ',', '.') }})</option>
                                 @endforeach
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Metode Setoran</label>
+                            <select name="metode_setor" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+                                <option value="antar_sendiri">Antar Sendiri ke Depo</option>
+                                <option value="jemput_bentor">Jemput Armada Bentor</option>
                             </select>
                         </div>
                         <div>
@@ -101,8 +121,9 @@
                         <span class="text-xl font-extrabold text-emerald-700" id="grandTotal">Rp 0</span>
                     </div>
 
-                    <button type="submit" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm rounded-xl shadow transition flex items-center justify-center gap-2">
-                        ⚖️ Simpan & Cetak Nota Timbangan
+                    <button type="submit" id="btnSubmitTimbang" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white font-bold text-sm rounded-xl shadow-lg shadow-emerald-600/30 transition flex items-center justify-center gap-2">
+                        <span id="btnIcon">⚖️</span>
+                        <span id="btnText">Simpan & Cetak Nota Timbangan</span>
                     </button>
                 </form>
             </div>
@@ -110,6 +131,13 @@
     </main>
 
     <script>
+        document.getElementById('formTimbang').addEventListener('submit', function() {
+            const btn = document.getElementById('btnSubmitTimbang');
+            btn.disabled = true;
+            btn.classList.add('opacity-75', 'cursor-not-allowed');
+            document.getElementById('btnIcon').textContent = '⏳';
+            document.getElementById('btnText').textContent = 'Menyimpan & Membuka Nota...';
+        });
         let itemCount = 1;
 
         const sampahOptions = `@foreach ($sampahList as $s)<option value="{{ $s->id_sampah }}" data-harga="{{ $s->harga_beli_nasabah }}">{{ $s->nama_sampah }} (Rp {{ number_format($s->harga_beli_nasabah,0,',','.') }}/{{ $s->satuan }})</option>@endforeach`;

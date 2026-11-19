@@ -78,21 +78,24 @@ class AdminController extends Controller
     {
         $validated = $request->validate([
             'id_user' => ['required', 'exists:users,id_user'],
-            'metode_setor' => ['required', 'in:antar_sendiri,jemput_bentor'],
+            'metode_setor' => ['nullable', 'in:antar_sendiri,jemput_bentor'],
+            'tanggal_setor' => ['nullable', 'date'],
             'items' => ['required', 'array', 'min:1'],
             'items.*.id_sampah' => ['required', 'exists:sampah,id_sampah'],
-            'items.*.jumlah_satuan' => ['required', 'numeric', 'min:0.1'],
+            'items.*.berat' => ['nullable', 'numeric', 'min:0.01'],
+            'items.*.jumlah_satuan' => ['nullable', 'numeric', 'min:0.01'],
             'catatan' => ['nullable', 'string'],
         ], [
             'id_user.required' => 'Pilih nasabah yang menyetor sampah.',
             'items.required' => 'Minimal harus ada 1 jenis sampah yang ditimbang.',
-            'items.*.jumlah_satuan.min' => 'Berat atau jumlah sampah minimal 0.1.',
         ]);
 
         $nasabah = User::findOrFail($validated['id_user']);
         $petugas = Auth::user();
 
-        DB::transaction(function () use ($validated, $nasabah, $petugas) {
+        $transaksi = null;
+
+        DB::transaction(function () use ($validated, $nasabah, $petugas, &$transaksi) {
             $kodeTransaksi = 'TRX-' . date('Ymd') . '-' . strtoupper(Str::random(5));
 
             $totalBerat = 0;
@@ -103,10 +106,10 @@ class AdminController extends Controller
                 'kode_transaksi' => $kodeTransaksi,
                 'id_user' => $nasabah->id_user,
                 'id_petugas' => $petugas->id_user,
-                'tanggal_setor' => now(),
+                'tanggal_setor' => $validated['tanggal_setor'] ?? now(),
                 'total_berat' => 0,
                 'total_nominal' => 0,
-                'metode_setor' => $validated['metode_setor'],
+                'metode_setor' => $validated['metode_setor'] ?? 'antar_sendiri',
                 'status_setor' => 'selesai',
                 'catatan' => $validated['catatan'] ?? null,
             ]);
@@ -114,7 +117,9 @@ class AdminController extends Controller
             // Simpan rincian tiap sampah yang ditimbang
             foreach ($validated['items'] as $item) {
                 $sampah = Sampah::findOrFail($item['id_sampah']);
-                $berat = (float) $item['jumlah_satuan'];
+                $berat = (float) ($item['berat'] ?? $item['jumlah_satuan'] ?? 0);
+                if ($berat <= 0) continue;
+
                 $hargaSaatTransaksi = $sampah->harga_beli_nasabah;
                 $subtotal = $berat * $hargaSaatTransaksi;
 
@@ -159,7 +164,9 @@ class AdminController extends Controller
             ]);
         });
 
-        return redirect()->route('admin.timbang')->with('success', 'Penimbangan berhasil dicatat! Saldo sebesar Rp ' . number_format($transaksi->total_nominal ?? 0, 0, ',', '.') . ' otomatis bertambah ke akun nasabah.');
+        // Langsung arahkan ke halaman CETAK NOTA agar petugas & nasabah langsung melihat struk transaksi!
+        return redirect()->route('admin.nota', $transaksi->id_transaksi_setor)
+            ->with('success', 'Penimbangan berhasil dicatat! Struk nota siap dicetak.');
     }
 
     /**
