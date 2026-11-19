@@ -77,6 +77,9 @@ Route::middleware('auth')->group(function () {
         Route::post('/timbang-sampah', [AdminController::class, 'timbangStore'])->name('timbang.store');
         Route::get('/nota/{id_transaksi_setor}', [AdminController::class, 'cetakNota'])->name('nota');
 
+        // Stok & Gudang Depo
+        Route::get('/stok-sampah', [AdminController::class, 'stokSampahIndex'])->name('stok_sampah');
+
         // Manajemen Nasabah
         Route::get('/nasabah', [AdminController::class, 'nasabahIndex'])->name('nasabah');
 

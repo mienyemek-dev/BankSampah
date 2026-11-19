@@ -277,9 +277,38 @@ class AdminController extends Controller
     }
 
     /**
+     * Stok & Inventori Gudang Depo (Real-Time)
+     */
+    public function stokSampahIndex(Request $request)
+    {
+        $sampahList = Sampah::with(['kategori'])->get()->map(function ($s) {
+            $masuk = DetailTransaksiSetor::where('id_sampah', $s->id_sampah)->sum('jumlah_satuan');
+            $keluar = DetailPenjualanPengepul::where('id_sampah', $s->id_sampah)->sum('berat_satuan');
+            $s->total_masuk = (float) $masuk;
+            $s->total_keluar = (float) $keluar;
+            $s->stok_saat_ini = max(0, $s->total_masuk - $s->total_keluar);
+            $s->estimasi_nilai = $s->stok_saat_ini * (float) $s->harga_jual_pengepul;
+            return $s;
+        });
+
+        $totalStokKg = $sampahList->sum('stok_saat_ini');
+        $totalEstimasiPendapatan = $sampahList->sum('estimasi_nilai');
+        $totalKomoditasTersedia = $sampahList->where('stok_saat_ini', '>', 0)->count();
+        $totalKomoditasKosong = $sampahList->where('stok_saat_ini', '<=', 0)->count();
+
+        return view('admin.stok_sampah_index', compact(
+            'sampahList',
+            'totalStokKg',
+            'totalEstimasiPendapatan',
+            'totalKomoditasTersedia',
+            'totalKomoditasKosong'
+        ));
+    }
+
+    /**
      * Penjualan Sampah Press ke Pengepul / Pabrik
      */
-    public function penjualanPengepulIndex()
+    public function penjualanPengepulIndex(Request $request)
     {
         $sampahList = Sampah::with(['kategori'])->get()->map(function ($s) {
             $masuk = DetailTransaksiSetor::where('id_sampah', $s->id_sampah)->sum('jumlah_satuan');
@@ -296,6 +325,8 @@ class AdminController extends Controller
         $totalPenjualanSukses = PenjualanPengepul::sum('total_pendapatan');
         $totalBeratTerjual = PenjualanPengepul::sum('total_berat');
 
+        $selectedSampahId = $request->query('id_sampah');
+
         $penjualanList = PenjualanPengepul::with(['admin', 'details.sampah'])->latest('tanggal_penjualan')->paginate(10);
 
         return view('admin.penjualan_pengepul_index', compact(
@@ -304,7 +335,8 @@ class AdminController extends Controller
             'totalStokKg', 
             'totalEstimasiPendapatan', 
             'totalPenjualanSukses',
-            'totalBeratTerjual'
+            'totalBeratTerjual',
+            'selectedSampahId'
         ));
     }
 

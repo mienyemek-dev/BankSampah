@@ -28,10 +28,11 @@
         $navItems = [
             ['route' => 'admin.dashboard',          'icon' => '📊', 'label' => 'Dashboard',              'key' => 'dashboard'],
             ['route' => 'admin.timbang',             'icon' => '⚖️', 'label' => 'Timbang & Setor',        'key' => 'timbang',   'badge' => 'Input'],
+            ['route' => 'admin.stok_sampah',         'icon' => '📦', 'label' => 'Stok & Gudang Depo',     'key' => 'stok',      'badge' => 'Gudang'],
+            ['route' => 'admin.penjualan_pengepul',  'icon' => '🏭', 'label' => 'Penjualan Pengepul',     'key' => 'penjualan'],
             ['route' => 'admin.nasabah',             'icon' => '👥', 'label' => 'Data Nasabah',            'key' => 'nasabah'],
             ['route' => 'admin.jemput',              'icon' => '🛺', 'label' => 'Jemput Bentor',           'key' => 'jemput'],
             ['route' => 'admin.harga_sampah',        'icon' => '🏷️', 'label' => 'Master Sampah & Harga',  'key' => 'harga'],
-            ['route' => 'admin.penjualan_pengepul',  'icon' => '🏭', 'label' => 'Penjualan Pengepul',     'key' => 'penjualan'],
             ['route' => 'admin.transit_limbah',      'icon' => '🏥', 'label' => 'Transit Limbah RS',      'key' => 'transit'],
             ['route' => 'admin.berita',              'icon' => '📰', 'label' => 'Berita & Edukasi',        'key' => 'berita'],
         ];

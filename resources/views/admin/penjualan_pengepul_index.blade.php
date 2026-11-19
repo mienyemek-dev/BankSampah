@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventori Gudang & Penjualan ke Pengepul - Panel Admin</title>
+    <title>Penjualan ke Pengepul / Pabrik - Panel Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -17,15 +17,18 @@
 
     <main class="flex-1 overflow-y-auto">
         {{-- Header Topbar --}}
-        <div class="bg-white border-b border-slate-200 px-8 py-4 flex items-center justify-between sticky top-0 z-20 shadow-sm">
+        <div class="bg-white border-b border-slate-200 px-8 py-4 flex flex-wrap items-center justify-between gap-4 sticky top-0 z-20 shadow-sm">
             <div>
-                <h1 class="text-base font-bold text-slate-800">🏭 Inventori Gudang & Penjualan ke Pengepul / Pabrik</h1>
-                <p class="text-xs text-slate-500 mt-0.5">Monitoring stok sampah hasil timbangan warga dan catat penjualan komoditas press ke pabrik</p>
+                <h1 class="text-base font-bold text-slate-800 flex items-center gap-2">
+                    <span>🏭</span> Penjualan Sampah Press ke Pengepul / Pabrik
+                </h1>
+                <p class="text-xs text-slate-500 mt-0.5">Catat pengiriman muatan komoditas press ke pabrik rekanan dan pencatatan kas masuk bank sampah</p>
             </div>
-            <span class="text-xs bg-emerald-50 text-emerald-800 font-bold px-3 py-1.5 rounded-full border border-emerald-200 flex items-center gap-1.5">
-                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                Stok Real-time Terkoneksi
-            </span>
+            <div class="flex items-center gap-3">
+                <a href="{{ route('admin.stok_sampah') }}" class="px-4 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-xs rounded-xl border border-emerald-300 transition flex items-center gap-1.5 shadow-sm">
+                    <span>📦</span> Lihat Stok Gudang Depo
+                </a>
+            </div>
         </div>
 
         <div class="p-8 max-w-7xl">
@@ -55,125 +58,47 @@
                 </div>
             @endif
 
-            {{-- 3 Kartu Ringkasan KPI --}}
+            {{-- 3 Kartu Ringkasan KPI Penjualan --}}
             <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
                 <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center text-2xl">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-2xl flex-shrink-0">
+                        💰
+                    </div>
+                    <div>
+                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Kas Masuk Terkumpul</p>
+                        <p class="text-2xl font-black text-emerald-700 mt-0.5">
+                            Rp {{ number_format($totalPenjualanSukses, 0, ',', '.') }}
+                        </p>
+                        <p class="text-[11px] text-slate-400 font-medium mt-0.5">Hasil penjualan riil ke pabrik</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-2xl bg-blue-100 text-blue-700 flex items-center justify-center text-2xl flex-shrink-0">
+                        ⚖️
+                    </div>
+                    <div>
+                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Tonase Terjual</p>
+                        <p class="text-2xl font-black text-blue-700 mt-0.5">
+                            {{ number_format($totalBeratTerjual, 1, ',', '.') }} <span class="text-xs font-semibold text-slate-500">Kg/Satuan</span>
+                        </p>
+                        <p class="text-[11px] text-slate-400 font-medium mt-0.5">Muatan keluar dari depo</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center text-2xl flex-shrink-0">
                         📦
                     </div>
                     <div>
-                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Stok di Gudang</p>
+                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Sisa Stok Fisik Gudang</p>
                         <p class="text-2xl font-black text-slate-800 mt-0.5">
-                            {{ number_format($totalStokKg, 1, ',', '.') }} <span class="text-sm font-semibold text-slate-500">Kg/Satuan</span>
+                            {{ number_format($totalStokKg, 1, ',', '.') }} <span class="text-xs font-semibold text-slate-500">Kg</span>
                         </p>
-                        <p class="text-[11px] text-emerald-600 font-semibold mt-0.5">Siap dijual ke pabrik pengepul</p>
+                        <a href="{{ route('admin.stok_sampah') }}" class="text-[11px] text-emerald-600 font-bold hover:underline mt-0.5 inline-block">
+                            Cek Rincian Inventori Depo →
+                        </a>
                     </div>
-                </div>
-
-                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-2xl">
-                        💎
-                    </div>
-                    <div>
-                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Potensi Kas Masuk</p>
-                        <p class="text-2xl font-black text-emerald-700 mt-0.5">
-                            Rp {{ number_format($totalEstimasiPendapatan, 0, ',', '.') }}
-                        </p>
-                        <p class="text-[11px] text-slate-400 font-medium mt-0.5">Taksiran nilai jika semua stok terjual</p>
-                    </div>
-                </div>
-
-                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-2xl bg-blue-100 text-blue-700 flex items-center justify-center text-2xl">
-                        🏭
-                    </div>
-                    <div>
-                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Terjual ke Pabrik</p>
-                        <p class="text-2xl font-black text-blue-700 mt-0.5">
-                            Rp {{ number_format($totalPenjualanSukses, 0, ',', '.') }}
-                        </p>
-                        <p class="text-[11px] text-slate-400 font-medium mt-0.5">Total tonase keluar: {{ number_format($totalBeratTerjual, 0, ',', '.') }} Kg</p>
-                    </div>
-                </div>
-            </div>
-
-            {{-- Tabel Inventori Stok Gudang Depo (Real-Time) --}}
-            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden mb-8">
-                <div class="px-6 py-4 border-b border-slate-100 flex flex-wrap items-center justify-between gap-3 bg-gradient-to-r from-slate-50 to-white">
-                    <div>
-                        <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
-                            <span>📊</span> Inventori Stok Sampah Depo Saat Ini
-                        </h2>
-                        <p class="text-xs text-slate-500 mt-0.5">Data terhitung otomatis dari: (Total Setoran Timbangan Nasabah) dikurangi (Total Penjualan ke Pabrik)</p>
-                    </div>
-                    <span class="text-xs text-slate-500 font-medium bg-slate-100 px-3 py-1 rounded-lg">
-                        {{ $sampahList->count() }} Jenis Komoditas
-                    </span>
-                </div>
-
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs">
-                        <thead class="bg-slate-50 text-slate-500 uppercase border-b border-slate-200 text-[10px] tracking-wider">
-                            <tr>
-                                <th class="p-3.5">Komoditas Sampah</th>
-                                <th class="p-3.5">Kategori</th>
-                                <th class="p-3.5 text-right">Total Masuk</th>
-                                <th class="p-3.5 text-right">Total Terjual</th>
-                                <th class="p-3.5 text-center">Sisa Stok di Depo</th>
-                                <th class="p-3.5 text-right">Harga Jual Pabrik</th>
-                                <th class="p-3.5 text-right">Estimasi Nilai</th>
-                                <th class="p-3.5 text-center">Aksi Cepat</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-100">
-                            @foreach ($sampahList as $s)
-                                <tr class="hover:bg-slate-50 transition" id="row-sampah-{{ $s->id_sampah }}">
-                                    <td class="p-3.5 font-bold text-slate-800">
-                                        {{ $s->nama_sampah }}
-                                    </td>
-                                    <td class="p-3.5 text-slate-500">
-                                        <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-slate-100 text-slate-600">
-                                            {{ $s->kategori->nama_kategori ?? 'Umum' }}
-                                        </span>
-                                    </td>
-                                    <td class="p-3.5 text-right font-medium text-slate-600">
-                                        {{ number_format($s->total_masuk, 1, ',', '.') }} {{ $s->satuan }}
-                                    </td>
-                                    <td class="p-3.5 text-right font-medium text-slate-400">
-                                        {{ number_format($s->total_keluar, 1, ',', '.') }} {{ $s->satuan }}
-                                    </td>
-                                    <td class="p-3.5 text-center">
-                                        @if ($s->stok_saat_ini > 20)
-                                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-black bg-emerald-100 text-emerald-800">
-                                                <span>🟢</span> {{ number_format($s->stok_saat_ini, 1, ',', '.') }} {{ $s->satuan }}
-                                            </span>
-                                        @elseif ($s->stok_saat_ini > 0)
-                                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800">
-                                                <span>🟡</span> {{ number_format($s->stok_saat_ini, 1, ',', '.') }} {{ $s->satuan }}
-                                            </span>
-                                        @else
-                                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-400">
-                                                <span>⚪</span> 0 {{ $s->satuan }}
-                                            </span>
-                                        @endif
-                                    </td>
-                                    <td class="p-3.5 text-right font-semibold text-slate-700">
-                                        Rp {{ number_format($s->harga_jual_pengepul, 0, ',', '.') }}/{{ $s->satuan }}
-                                    </td>
-                                    <td class="p-3.5 text-right font-black text-emerald-700">
-                                        Rp {{ number_format($s->estimasi_nilai, 0, ',', '.') }}
-                                    </td>
-                                    <td class="p-3.5 text-center">
-                                        <button type="button" 
-                                            onclick="selectForSale({{ $s->id_sampah }}, '{{ addslashes($s->nama_sampah) }}', {{ $s->harga_jual_pengepul }}, {{ $s->stok_saat_ini }}, '{{ $s->satuan }}')"
-                                            class="px-3 py-1.5 rounded-lg text-xs font-bold transition shadow-sm {{ $s->stok_saat_ini > 0 ? 'bg-emerald-600 hover:bg-emerald-700 text-white' : 'bg-slate-200 text-slate-400 cursor-not-allowed' }}">
-                                            Jual Ini →
-                                        </button>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
                 </div>
             </div>
 
@@ -187,8 +112,8 @@
                             🏭
                         </div>
                         <div>
-                            <h2 class="text-sm font-bold text-slate-800">Form Penjualan ke Pabrik</h2>
-                            <p class="text-xs text-slate-500">Kirim muatan sampah press & terima kas</p>
+                            <h2 class="text-sm font-bold text-slate-800">Form Pengiriman ke Pabrik</h2>
+                            <p class="text-xs text-slate-500">Kirim muatan komoditas & catat kas masuk</p>
                         </div>
                     </div>
 
@@ -197,7 +122,7 @@
 
                         <div>
                             <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Nama Pabrik / Pengepul <span class="text-rose-500">*</span></label>
-                            <input type="text" name="nama_pabrik_pengepul" placeholder="Contoh: PT Daur Ulang Mandiri / Bos Pengepul Joko" required
+                            <input type="text" name="nama_pabrik_pengepul" placeholder="Contoh: PT Daur Ulang Mandiri / CV Berkah Jaya" required
                                 value="{{ old('nama_pabrik_pengepul') }}"
                                 class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs outline-none focus:ring-2 focus:ring-emerald-500">
                         </div>
@@ -217,8 +142,9 @@
                                     <option value="{{ $s->id_sampah }}" 
                                         data-harga="{{ $s->harga_jual_pengepul }}"
                                         data-stok="{{ $s->stok_saat_ini }}"
-                                        data-satuan="{{ $s->satuan }}">
-                                        {{ $s->nama_sampah }} (Stok: {{ number_format($s->stok_saat_ini, 1, ',', '.') }} {{ $s->satuan }})
+                                        data-satuan="{{ $s->satuan }}"
+                                        {{ (old('id_sampah', $selectedSampahId) == $s->id_sampah) ? 'selected' : '' }}>
+                                        {{ $s->nama_sampah }} (Sisa Stok: {{ number_format($s->stok_saat_ini, 1, ',', '.') }} {{ $s->satuan }})
                                     </option>
                                 @endforeach
                             </select>
@@ -239,7 +165,7 @@
                         <div class="grid grid-cols-2 gap-3">
                             <div>
                                 <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Berat Dijual (<span id="lblUnit">Kg</span>) <span class="text-rose-500">*</span></label>
-                                <input type="number" step="0.1" min="0.1" name="berat_jual" id="beratJual" value="" oninput="calcTotal()" required
+                                <input type="number" step="0.1" min="0.1" name="berat_jual" id="beratJual" value="{{ old('berat_jual') }}" oninput="calcTotal()" required
                                     placeholder="0.0"
                                     class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs outline-none focus:ring-2 focus:ring-emerald-500">
                                 <p id="errStok" class="text-[11px] font-bold text-rose-500 mt-1 hidden"></p>
@@ -247,34 +173,36 @@
                             <div>
                                 <label class="block text-xs font-bold text-slate-700 uppercase mb-1 flex items-center justify-between">
                                     <span>Harga Pabrik (Rp) *</span>
-                                    <span class="text-[10px] text-slate-400 font-normal">Dari Master</span>
+                                    <span class="text-[10px] text-emerald-600 font-semibold">Bisa Nego</span>
                                 </label>
-                                <input type="number" step="50" min="1" name="harga_jual_satuan" id="hargaJual" value="0" oninput="calcTotal()" required
+                                <input type="number" step="50" min="1" name="harga_jual_satuan" id="hargaJual" value="{{ old('harga_jual_satuan', 0) }}" oninput="calcTotal()" required
                                     class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs outline-none focus:ring-2 focus:ring-emerald-500">
                             </div>
                         </div>
 
                         <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 text-[11px] text-slate-500 leading-relaxed">
-                            💡 <b>Info Harga:</b> Harga otomatis diisi dari <i>Master Harga</i>. Jika terjadi fluktuasi pasar atau tawar-menawar khusus dengan pabrik, Anda tetap dapat menyesuaikan nominal harga per kilogramnya.
+                            💡 <b>Kenapa Harga Pabrik Bisa Diatur?</b><br>
+                            Harga otomatis terisi dari <i>Master Harga</i> sebagai patokan standar. Namun, karena harga pabrik di lapangan sering fluktuatif mengikuti grade/kadar air dan negosiasi tonase, staf dapat menyesuaikan nominal harga per kilogramnya sesuai kesepakatan nota pabrik.
                         </div>
 
                         <div>
                             <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Catatan Pengiriman (Opsional)</label>
-                            <input type="text" name="catatan" placeholder="Nomor truk / sopir pengangkut..."
+                            <input type="text" name="catatan" placeholder="Nomor polisi truk / nama sopir pengangkut..."
+                                value="{{ old('catatan') }}"
                                 class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs outline-none focus:ring-2 focus:ring-emerald-500">
                         </div>
 
                         <div class="p-4 bg-emerald-50 rounded-xl flex items-center justify-between border border-emerald-200">
                             <div>
-                                <p class="text-[11px] text-slate-500 uppercase font-bold">Total Nilai Kas Masuk</p>
-                                <p class="text-xs text-emerald-800 font-semibold">Otomatis masuk kas bank sampah</p>
+                                <p class="text-[11px] text-slate-500 uppercase font-bold">Total Kas Masuk</p>
+                                <p class="text-xs text-emerald-800 font-semibold">Masuk ke kas Bank Sampah</p>
                             </div>
                             <span class="text-lg font-black text-emerald-700" id="totalPendapatan">Rp 0</span>
                         </div>
 
                         <button type="submit" id="btnSubmitJual" class="w-full py-3 bg-blue-600 hover:bg-blue-700 active:scale-[0.99] text-white font-bold text-xs rounded-xl shadow-lg shadow-blue-600/30 transition flex items-center justify-center gap-2">
                             <span id="btnIconJual">💾</span>
-                            <span id="btnTextJual">Simpan Transaksi Penjualan</span>
+                            <span id="btnTextJual">Simpan & Masukkan ke Kas</span>
                         </button>
                     </form>
                 </div>
@@ -284,7 +212,7 @@
                     <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
                         <div>
                             <h3 class="text-sm font-bold text-slate-800">Riwayat Pengiriman & Penjualan ke Pabrik</h3>
-                            <p class="text-xs text-slate-500 mt-0.5">Pencatatan pendapatan riil kas Bank Sampah dari penjualan komoditas</p>
+                            <p class="text-xs text-slate-500 mt-0.5">Catatan transaksi muatan keluar dari depo ke pabrik rekanan</p>
                         </div>
                     </div>
 
@@ -295,7 +223,7 @@
                                     <th class="p-3.5">Kode & Tanggal</th>
                                     <th class="p-3.5">Pabrik Tujuan</th>
                                     <th class="p-3.5">Komoditas & Muatan</th>
-                                    <th class="p-3.5 text-right">Pendapatan Bersih</th>
+                                    <th class="p-3.5 text-right">Kas Masuk (Rp)</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-slate-100">
@@ -326,7 +254,7 @@
                                         <td colspan="4" class="p-12 text-center text-slate-400">
                                             <div class="text-4xl mb-2">🏭</div>
                                             <p class="font-bold text-slate-600">Belum ada catatan penjualan ke pabrik</p>
-                                            <p class="text-xs text-slate-400 mt-1">Pilih komoditas dari tabel inventori di atas dan catat pengiriman pertama Anda</p>
+                                            <p class="text-xs text-slate-400 mt-1">Gunakan form di samping untuk mencatat transaksi penjualan muatan ke pabrik</p>
                                         </td>
                                     </tr>
                                 @endforelse
@@ -351,12 +279,20 @@
         function onSampahChange() {
             const sel = document.getElementById('selectSampah');
             const opt = sel.options[sel.selectedIndex];
+            if (!opt) return;
+
             const harga = opt.getAttribute('data-harga') || 0;
             const stok  = parseFloat(opt.getAttribute('data-stok')) || 0;
             const satuan = opt.getAttribute('data-satuan') || 'Kg';
 
             currentAvailableStock = stok;
-            document.getElementById('hargaJual').value = harga;
+            
+            // Hanya update harga jika input belum diisi user atau bernilai 0
+            const hargaInput = document.getElementById('hargaJual');
+            if (!hargaInput.value || parseFloat(hargaInput.value) === 0) {
+                hargaInput.value = harga;
+            }
+
             document.getElementById('lblUnit').innerText = satuan;
 
             const badgeContainer = document.getElementById('stockBadgeContainer');
@@ -377,23 +313,6 @@
             }
         }
 
-        function selectForSale(id, nama, harga, stok, satuan) {
-            const sel = document.getElementById('selectSampah');
-            sel.value = id;
-            onSampahChange();
-
-            // Isi berat langsung sesuai stok jika ada
-            if (stok > 0) {
-                document.getElementById('beratJual').value = stok;
-            } else {
-                document.getElementById('beratJual').value = '';
-            }
-            calcTotal();
-
-            // Scroll mulus ke form
-            document.getElementById('formSection').scrollIntoView({ behavior: 'smooth' });
-        }
-
         function calcTotal() {
             const beratInput = document.getElementById('beratJual');
             const qty   = parseFloat(beratInput.value) || 0;
@@ -405,7 +324,7 @@
 
             // Validasi apakah melebihi stok yang ada
             if (sel.value && qty > currentAvailableStock) {
-                errEl.innerText = `❌ Melebihi stok! Maksimal yang tersedia: ${currentAvailableStock.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} ${satuan}`;
+                errEl.innerText = `❌ Melebihi stok! Maksimal yang tersedia di depo: ${currentAvailableStock.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} ${satuan}`;
                 errEl.classList.remove('hidden');
                 beratInput.classList.add('border-rose-500', 'bg-rose-50');
                 btn.disabled = true;
@@ -427,6 +346,14 @@
             btn.classList.add('opacity-75', 'cursor-not-allowed');
             document.getElementById('btnIconJual').innerText = '⏳';
             document.getElementById('btnTextJual').innerText = 'Menyimpan Transaksi...';
+        });
+
+        // Trigger on initial load (misal redirect dengan ?id_sampah=...)
+        document.addEventListener('DOMContentLoaded', function() {
+            const sel = document.getElementById('selectSampah');
+            if (sel.value) {
+                onSampahChange();
+            }
         });
     </script>
 </body>
