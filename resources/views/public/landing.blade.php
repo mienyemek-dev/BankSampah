@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Bank Sampah Bumi Sai Wawai – Desa Banjar Rejo, Kec. Batanghari, Kab. Lampung Timur. Kelola sampah rumah tangga, dapatkan tabungan, dan wujudkan lingkungan bersih bersama kami.">
     <title>Bank Sampah Bumi Sai Wawai – Sampah Jadi Berkah</title>
+    <link rel="icon" type="image/png" href="{{ asset('images/logo-circle.png') }}">
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
 
     {{-- Fonts --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
