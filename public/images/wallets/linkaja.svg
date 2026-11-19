@@ -1,0 +1,10 @@
+<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="48" height="48" rx="12" fill="#ED1C24"/>
+  <!-- LinkAja Geometric Loop Mark -->
+  <path d="M14 16H20V32H14V16Z" fill="#FFFFFF"/>
+  <path d="M20 27H26V32H20V27Z" fill="#FFFFFF"/>
+  <path d="M26 16H32V32H26V16Z" fill="#FFFFFF"/>
+  <path d="M30 16H34C35.1046 16 36 16.8954 36 18V22C36 23.1046 35.1046 24 34 24H30V16Z" fill="#FFD100"/>
+  <circle cx="23" cy="20" r="2.5" fill="#FFD100"/>
+</svg>
+

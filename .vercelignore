@@ -1,0 +1,11 @@
+.git
+.github
+.env
+.env.example
+.phpunit.result.cache
+tests
+node_modules
+*.bat
+JALANKAN_WEB.bat
+database/database.sqlite
+storage/*.key

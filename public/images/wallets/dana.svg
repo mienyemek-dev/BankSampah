@@ -1,0 +1,11 @@
+<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="48" height="48" rx="12" fill="#118EEA"/>
+  <!-- DANA Official Emblem / Wallet Mark -->
+  <path d="M12 20C12 16.6863 14.6863 14 18 14H30C33.3137 14 36 16.6863 36 20V28C36 31.3137 33.3137 34 30 34H18C14.6863 34 12 31.3137 12 28V20Z" fill="#0D72BF"/>
+  <path d="M12 20C12 16.6863 14.6863 14 18 14H30C33.3137 14 36 16.6863 36 20V24H12V20Z" fill="#107DCE"/>
+  <path d="M12 22H36V28C36 31.3137 33.3137 34 30 34H18C14.6863 34 12 31.3137 12 28V22Z" fill="#FFFFFF"/>
+  <path d="M27 28C27 26.3431 28.3431 25 30 25H36V31H30C28.3431 31 27 29.6569 27 28Z" fill="#118EEA"/>
+  <circle cx="31.5" cy="28" r="1.5" fill="#FFFFFF"/>
+  <text x="20" y="30.5" font-family="'Plus Jakarta Sans', sans-serif" font-weight="900" font-size="7.5" fill="#118EEA" letter-spacing="-0.5">DANA</text>
+</svg>
+

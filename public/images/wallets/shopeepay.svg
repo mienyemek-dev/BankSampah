@@ -1,0 +1,11 @@
+<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="48" height="48" rx="12" fill="#EE4D2D"/>
+  <!-- Shopee Shopping Bag -->
+  <!-- Handle -->
+  <path d="M20 17C20 14.7909 21.7909 13 24 13C26.2091 13 28 14.7909 28 17" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Bag Body -->
+  <path d="M15 17H33L31.5 33C31.5 34.1046 30.6046 35 29.5 35H18.5C17.3954 35 16.5 34.1046 16.5 33L15 17Z" fill="#FFFFFF"/>
+  <!-- Stylized Shopee 'S' in Orange -->
+  <path d="M25.8 22C25.8 20.8 24.8 20.2 23.8 20.2C22.6 20.2 22 20.8 22 21.4C22 23 26 23.2 26 25.8C26 27.5 24.5 28.5 23 28.5C21.2 28.5 20.2 27.2 20.2 26.2M22.2 26.8C22.2 27.8 23.2 28.5 24.2 28.5" stroke="#EE4D2D" stroke-width="2" stroke-linecap="round"/>
+</svg>
+
