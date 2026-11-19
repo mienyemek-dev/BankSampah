@@ -392,10 +392,17 @@
                                                 Menunggu Transfer
                                             </span>
                                         @elseif ($p->status_penarikan === 'selesai')
-                                            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
-                                                <span>✅</span>
-                                                Berhasil Ditransfer
-                                            </span>
+                                            <div class="flex items-center gap-2">
+                                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                                                    <span>✅</span>
+                                                    Berhasil Ditransfer
+                                                </span>
+                                                <button type="button" 
+                                                    onclick="openBuktiModalNasabah('{{ $p->kode_penarikan }}', '{{ $p->tanggal_selesai ? $p->tanggal_selesai->format('d M Y, H:i') : $p->tanggal_pengajuan->format('d M Y, H:i') }}', '{{ addslashes($p->nama_bank) }}', '{{ $p->nomor_rekening }}', '{{ addslashes($p->atas_nama) }}', {{ $p->nominal_penarikan }}, '{{ addslashes($p->catatan_admin ?? 'Dana berhasil ditransfer ke rekening nasabah.') }}')"
+                                                    class="text-xs text-emerald-700 font-bold hover:bg-emerald-100 transition inline-flex items-center gap-1 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-300 shadow-xs">
+                                                    <span>📄</span> Resi
+                                                </button>
+                                            </div>
                                         @elseif ($p->status_penarikan === 'ditolak')
                                             <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-rose-50 text-rose-800 border border-rose-200">
                                                 <span>❌</span>
@@ -454,11 +461,90 @@
         &copy; {{ date('Y') }} Bank Sampah Bumi Sai Wawai &bull; Desa Banjar Rejo, Batanghari, Lampung Timur
     </footer>
 
+    {{-- MODAL LIHAT RESI PENCAIRAN NASABAH --}}
+    <div id="modalResiNasabah" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs hidden p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full shadow-2xl border border-slate-200 overflow-hidden transform transition-all">
+            <div class="p-6 bg-gradient-to-br from-emerald-900 to-teal-950 text-white text-center relative">
+                <button type="button" onclick="closeBuktiModalNasabah()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-sm transition">
+                    ✕
+                </button>
+                <img src="{{ asset('images/logo-circle.png') }}" alt="Logo" class="w-12 h-12 rounded-full border-2 border-emerald-400 mx-auto mb-2 object-cover shadow-md">
+                <h3 class="text-sm font-black uppercase tracking-wider text-emerald-300">Bank Sampah Bumi Sai Wawai</h3>
+                <p class="text-xs text-emerald-100 font-semibold mt-0.5">Resi Bukti Pencairan Saldo</p>
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-[10px] font-bold mt-2">
+                    <span>✅</span> DANA BERHASIL DITRANSFER
+                </div>
+            </div>
+
+            <div class="p-6 space-y-4 text-xs">
+                <div class="border-b border-dashed border-slate-200 pb-3 space-y-1.5">
+                    <div class="flex justify-between">
+                        <span class="text-slate-400">Kode Transaksi</span>
+                        <span class="font-mono font-bold text-slate-800" id="mresKode">-</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-400">Waktu Transfer</span>
+                        <span class="font-semibold text-slate-700" id="mresTanggal">-</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-400">E-Wallet / Bank Tujuan</span>
+                        <span class="font-bold text-blue-700" id="mresBank">-</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-400">Nomor Akun / HP</span>
+                        <span class="font-mono font-bold text-slate-800" id="mresNorek">-</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-400">Atas Nama</span>
+                        <span class="font-semibold text-slate-700" id="mresAtasNama">-</span>
+                    </div>
+                </div>
+
+                <div class="p-3.5 bg-emerald-50 rounded-2xl border border-emerald-200 flex items-center justify-between">
+                    <div>
+                        <span class="text-[10px] font-bold text-emerald-800 uppercase tracking-wider block">Total Dana Cair</span>
+                        <span class="text-xs text-slate-500">Bebas Biaya Transfer</span>
+                    </div>
+                    <span class="text-xl font-black text-emerald-700" id="mresNominal">Rp 0</span>
+                </div>
+
+                <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-600">
+                    <p class="text-[10px] uppercase font-bold text-slate-400 mb-0.5">Catatan Admin Keuangan:</p>
+                    <p class="font-semibold text-slate-700 italic" id="mresCatatan">-</p>
+                </div>
+
+                <div class="pt-2 flex items-center gap-2">
+                    <button type="button" onclick="window.print()" class="flex-1 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition flex items-center justify-center gap-1.5">
+                        <span>🖨️</span> Cetak Resi
+                    </button>
+                    <button type="button" onclick="closeBuktiModalNasabah()" class="flex-1 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition">
+                        Tutup
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         function setNominal(amount) {
             const input = document.getElementById('nominal_penarikan');
             input.value = amount;
             input.focus();
+        }
+
+        function openBuktiModalNasabah(kode, tanggal, bank, norek, atasNama, nominal, catatan) {
+            document.getElementById('mresKode').innerText = kode;
+            document.getElementById('mresTanggal').innerText = tanggal;
+            document.getElementById('mresBank').innerText = bank;
+            document.getElementById('mresNorek').innerText = norek;
+            document.getElementById('mresAtasNama').innerText = atasNama;
+            document.getElementById('mresNominal').innerText = 'Rp ' + Number(nominal).toLocaleString('id-ID');
+            document.getElementById('mresCatatan').innerText = catatan || 'Dana berhasil ditransfer ke rekening nasabah.';
+            document.getElementById('modalResiNasabah').classList.remove('hidden');
+        }
+
+        function closeBuktiModalNasabah() {
+            document.getElementById('modalResiNasabah').classList.add('hidden');
         }
     </script>
 

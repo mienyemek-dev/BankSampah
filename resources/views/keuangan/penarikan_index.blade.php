@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="{{ asset('images/logo-circle.png') }}">
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
     <script>
         tailwind.config = {
             theme: {
@@ -20,11 +21,8 @@
 </head>
 <body class="bg-slate-100 font-sans text-slate-800 antialiased min-h-screen flex">
 
-    {{-- ============================================================ --}}
-    {{-- SIDEBAR BENDAHARA — TEMA HIJAU EMERALD KONSISTEN             --}}
-    {{-- ============================================================ --}}
+    {{-- SIDEBAR BENDAHARA --}}
     <aside class="w-64 bg-gradient-to-b from-emerald-950 via-emerald-900 to-emerald-950 text-white flex flex-col flex-shrink-0 min-h-screen sticky top-0 border-r border-emerald-800/70 z-30 shadow-2xl">
-        {{-- Brand Header --}}
         <div class="p-5 border-b border-emerald-800/70 bg-emerald-950/50">
             <div class="flex items-center gap-3">
                 <img src="{{ asset('images/logo-circle.png') }}" alt="Logo" class="w-10 h-10 rounded-full border border-emerald-400/50 object-cover shadow-md">
@@ -42,7 +40,6 @@
             </div>
         </div>
 
-        {{-- Nav Menu --}}
         <nav class="p-3.5 space-y-1.5 flex-1 overflow-y-auto">
             <a href="{{ route('keuangan.dashboard') }}"
                class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-emerald-100/85 hover:bg-emerald-800/70 hover:text-white text-xs font-semibold transition group">
@@ -65,7 +62,6 @@
             </a>
         </nav>
 
-        {{-- User Info --}}
         <div class="p-4 border-t border-emerald-800/70 bg-emerald-950/50">
             <div class="flex items-center gap-3 mb-3">
                 <div class="w-9 h-9 rounded-full bg-emerald-700 border border-emerald-500/50 flex items-center justify-center font-extrabold text-sm text-white shadow-sm flex-shrink-0">
@@ -86,9 +82,7 @@
         </div>
     </aside>
 
-    {{-- ============================================================ --}}
-    {{-- MAIN CONTENT                                                 --}}
-    {{-- ============================================================ --}}
+    {{-- MAIN CONTENT --}}
     <main class="flex-1 overflow-y-auto">
         {{-- Top Header --}}
         <div class="bg-white border-b border-slate-200 px-8 py-4 flex items-center justify-between sticky top-0 z-20 shadow-sm">
@@ -103,19 +97,19 @@
             </div>
         </div>
 
-        <div class="p-8 space-y-6">
+        <div class="p-8 space-y-6 max-w-7xl">
 
             @if (session('success'))
-                <div class="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm flex items-center gap-2">
+                <div class="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm flex items-center gap-2 shadow-sm">
                     <span>✅</span>
-                    <span>{{ session('success') }}</span>
+                    <span class="font-semibold">{{ session('success') }}</span>
                 </div>
             @endif
 
             @if (session('info'))
-                <div class="p-4 rounded-xl bg-blue-50 border border-blue-200 text-blue-800 text-sm flex items-center gap-2">
+                <div class="p-4 rounded-xl bg-blue-50 border border-blue-200 text-blue-800 text-sm flex items-center gap-2 shadow-sm">
                     <span>ℹ️</span>
-                    <span>{{ session('info') }}</span>
+                    <span class="font-semibold">{{ session('info') }}</span>
                 </div>
             @endif
 
@@ -151,11 +145,14 @@
 
             {{-- Tabel Pencairan --}}
             <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-                <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
-                    <h3 class="text-sm font-bold text-slate-800">Daftar Semua Permohonan</h3>
+                <div class="px-6 py-4 border-b border-slate-100 flex flex-wrap items-center justify-between gap-3 bg-gradient-to-r from-slate-50 to-white">
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-800">Daftar Semua Permohonan Penarikan</h3>
+                        <p class="text-xs text-slate-500 mt-0.5">Tinjau antrean penarikan dana nasabah dan cairkan ke rekening tujuan</p>
+                    </div>
                     <div class="relative">
                         <input type="text" id="searchPenarikan" placeholder="Cari nama / kode..."
-                            class="pl-8 pr-3 py-1.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-emerald-500 outline-none w-48">
+                            class="pl-8 pr-3 py-1.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-emerald-500 outline-none w-52 bg-white">
                         <span class="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs">🔍</span>
                     </div>
                 </div>
@@ -163,26 +160,26 @@
                     <table class="w-full text-left text-xs" id="tablePenarikan">
                         <thead class="bg-slate-50 text-slate-500 uppercase border-b border-slate-200 text-[10px] tracking-wider">
                             <tr>
-                                <th class="p-3">Kode & Tanggal</th>
-                                <th class="p-3">Nama Nasabah</th>
-                                <th class="p-3">Rekening / E-Wallet Tujuan</th>
-                                <th class="p-3">Nominal</th>
-                                <th class="p-3">Status</th>
-                                <th class="p-3 text-right">Aksi</th>
+                                <th class="p-3.5">Kode & Tanggal</th>
+                                <th class="p-3.5">Nama Nasabah</th>
+                                <th class="p-3.5">Rekening / E-Wallet Tujuan</th>
+                                <th class="p-3.5 text-right">Nominal</th>
+                                <th class="p-3.5 text-center">Status</th>
+                                <th class="p-3.5 text-center">Aksi / Otorisasi</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100">
                             @forelse ($penarikanList as $pen)
                                 <tr class="hover:bg-slate-50 transition pen-row">
-                                    <td class="p-3">
+                                    <td class="p-3.5">
                                         <span class="font-mono font-bold text-slate-800">{{ $pen->kode_penarikan }}</span>
                                         <p class="text-[11px] text-slate-400">{{ $pen->tanggal_pengajuan->format('d M Y, H:i') }}</p>
                                     </td>
-                                    <td class="p-3 font-semibold text-slate-700">
+                                    <td class="p-3.5 font-semibold text-slate-700">
                                         {{ $pen->nasabah->nama_lengkap ?? 'Nasabah' }}
                                         <p class="text-[11px] text-slate-400 font-normal">{{ $pen->nasabah->no_hp ?? '-' }}</p>
                                     </td>
-                                    <td class="p-3">
+                                    <td class="p-3.5">
                                         @php
                                             $bank = strtoupper($pen->nama_bank ?? '');
                                             $badgeColor = match(true) {
@@ -193,61 +190,66 @@
                                                 default                      => 'bg-slate-100 text-slate-700',
                                             };
                                         @endphp
-                                        <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold {{ $badgeColor }} mb-1">
+                                        <span class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold {{ $badgeColor }} mb-1">
                                             {{ $pen->nama_bank }}
                                         </span>
-                                        <p class="text-[11px] text-slate-500 font-mono">{{ $pen->nomor_rekening }}</p>
-                                        <p class="text-[10px] text-slate-400">a.n. {{ $pen->atas_nama }}</p>
+                                        <p class="text-xs text-slate-700 font-mono font-bold">{{ $pen->nomor_rekening }}</p>
+                                        <p class="text-[11px] text-slate-400">a.n. {{ $pen->atas_nama }}</p>
                                     </td>
-                                    <td class="p-3 font-extrabold text-emerald-700 text-sm">
+                                    <td class="p-3.5 text-right font-black text-emerald-700 text-sm whitespace-nowrap">
                                         Rp {{ number_format($pen->nominal_penarikan, 0, ',', '.') }}
                                     </td>
-                                    <td class="p-3">
+                                    <td class="p-3.5 text-center whitespace-nowrap">
                                         @if ($pen->status_penarikan === 'diajukan')
-                                            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800">
-                                                ⏳ Menunggu
+                                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300">
+                                                <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+                                                Menunggu Otorisasi
                                             </span>
                                         @elseif ($pen->status_penarikan === 'selesai')
-                                            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
-                                                ✅ Selesai
+                                            <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                                                <span>✅</span> Selesai Ditransfer
                                             </span>
                                         @elseif ($pen->status_penarikan === 'ditolak')
-                                            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-rose-100 text-rose-800">
-                                                ❌ Ditolak
+                                            <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[10px] font-bold bg-rose-100 text-rose-800 border border-rose-300">
+                                                <span>❌</span> Ditolak
                                             </span>
                                         @endif
                                     </td>
-                                    <td class="p-3 text-right">
+                                    <td class="p-3.5 text-center whitespace-nowrap">
                                         @if ($pen->status_penarikan === 'diajukan')
-                                            <div class="inline-flex gap-2">
-                                                <form method="POST" action="{{ route('keuangan.penarikan.proses', $pen->id_penarikan) }}">
-                                                    @csrf
-                                                    <input type="hidden" name="action" value="setujui">
-                                                    <button type="submit"
-                                                        class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition shadow-sm">
-                                                        ✔ Cairkan
-                                                    </button>
-                                                </form>
-                                                <form method="POST" action="{{ route('keuangan.penarikan.proses', $pen->id_penarikan) }}">
-                                                    @csrf
-                                                    <input type="hidden" name="action" value="tolak">
-                                                    <button type="submit"
-                                                        onclick="return confirm('Tolak permohonan ini dan kembalikan saldo ke nasabah?')"
-                                                        class="px-2.5 py-1.5 bg-rose-100 hover:bg-rose-200 text-rose-800 rounded-lg text-xs font-bold transition">
-                                                        Tolak
-                                                    </button>
-                                                </form>
+                                            <div class="inline-flex items-center gap-2">
+                                                {{-- Tombol Buka Modal Pencairan --}}
+                                                <button type="button"
+                                                    onclick="openCairkanModal({{ $pen->id_penarikan }}, '{{ $pen->kode_penarikan }}', '{{ addslashes($pen->nasabah->nama_lengkap ?? 'Nasabah') }}', '{{ addslashes($pen->nama_bank) }}', '{{ $pen->nomor_rekening }}', '{{ addslashes($pen->atas_nama) }}', {{ $pen->nominal_penarikan }})"
+                                                    class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition shadow-sm flex items-center gap-1">
+                                                    <span>✔</span> Cairkan Dana
+                                                </button>
+
+                                                {{-- Tombol Buka Modal Tolak --}}
+                                                <button type="button"
+                                                    onclick="openTolakModal({{ $pen->id_penarikan }}, '{{ $pen->kode_penarikan }}', '{{ addslashes($pen->nasabah->nama_lengkap ?? 'Nasabah') }}', {{ $pen->nominal_penarikan }})"
+                                                    class="px-2.5 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-lg text-xs font-bold transition">
+                                                    Tolak
+                                                </button>
                                             </div>
+                                        @elseif ($pen->status_penarikan === 'selesai')
+                                            {{-- Tombol Lihat Bukti / Resi Transfer --}}
+                                            <button type="button"
+                                                onclick="openBuktiModal('{{ $pen->kode_penarikan }}', '{{ $pen->tanggal_selesai ? $pen->tanggal_selesai->format('d M Y, H:i') : $pen->tanggal_pengajuan->format('d M Y, H:i') }}', '{{ addslashes($pen->nasabah->nama_lengkap ?? 'Nasabah') }}', '{{ addslashes($pen->nama_bank) }}', '{{ $pen->nomor_rekening }}', '{{ addslashes($pen->atas_nama) }}', {{ $pen->nominal_penarikan }}, '{{ addslashes($pen->catatan_admin ?? 'Dana berhasil ditransfer ke rekening nasabah.') }}', '{{ $pen->bukti_transfer_path }}')"
+                                                class="px-3 py-1.5 bg-slate-100 hover:bg-emerald-50 hover:text-emerald-800 text-slate-700 border border-slate-200 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-xs mx-auto">
+                                                <span>📄</span> Lihat Bukti Transfer
+                                            </button>
                                         @else
-                                            <span class="text-xs text-slate-400">Sudah Diproses</span>
+                                            <span class="text-xs text-rose-500 font-semibold italic">Permohonan Ditolak</span>
                                         @endif
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="p-8 text-center text-slate-400">
-                                        <div class="text-3xl mb-2">🎉</div>
-                                        <p class="font-semibold">Tidak ada antrean pencairan dana</p>
+                                    <td colspan="6" class="p-12 text-center text-slate-400">
+                                        <div class="text-4xl mb-2">🎉</div>
+                                        <p class="font-bold text-slate-600">Tidak ada antrean pencairan dana</p>
+                                        <p class="text-xs text-slate-400 mt-1">Semua permohonan penarikan saldo nasabah telah diproses</p>
                                     </td>
                                 </tr>
                             @endforelse
@@ -255,13 +257,229 @@
                     </table>
                 </div>
 
-                <div class="px-6 py-4 border-t border-slate-100">
-                    {{ $penarikanList->links() }}
-                </div>
+                @if ($penarikanList->hasPages())
+                    <div class="px-6 py-4 border-t border-slate-100">
+                        {{ $penarikanList->links() }}
+                    </div>
+                @endif
             </div>
 
         </div>
     </main>
+
+    {{-- ============================================================ --}}
+    {{-- MODAL 1: PROSES PENCAIRAN DANA (UPLOAD BUKTI & CATATAN)      --}}
+    {{-- ============================================================ --}}
+    <div id="modalCairkan" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs hidden p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full shadow-2xl border border-slate-200 overflow-hidden transform transition-all animate-in fade-in zoom-in-95">
+            
+            {{-- Modal Header --}}
+            <div class="p-6 bg-gradient-to-r from-emerald-800 to-teal-800 text-white flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <span class="text-2xl">💸</span>
+                    <div>
+                        <h3 class="text-base font-bold">Otorisasi Pencairan Dana</h3>
+                        <p class="text-xs text-emerald-200" id="cairKode">SLS-XXXXXX</p>
+                    </div>
+                </div>
+                <button type="button" onclick="closeCairkanModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-sm transition">
+                    ✕
+                </button>
+            </div>
+
+            <form id="formProsesCairkan" method="POST" action="" enctype="multipart/form-data" class="p-6 space-y-4">
+                @csrf
+                <input type="hidden" name="action" value="setujui">
+
+                {{-- Detail Rekening Penerima --}}
+                <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 space-y-2">
+                    <div class="flex justify-between items-center text-xs">
+                        <span class="text-slate-500 font-semibold">Nasabah Penerima:</span>
+                        <span class="font-bold text-slate-800" id="cairNama">-</span>
+                    </div>
+                    <div class="flex justify-between items-center text-xs">
+                        <span class="text-slate-500 font-semibold">E-Wallet / Bank:</span>
+                        <span class="font-bold text-blue-700" id="cairBank">-</span>
+                    </div>
+                    <div class="flex justify-between items-center text-xs">
+                        <span class="text-slate-500 font-semibold">Nomor Akun / HP:</span>
+                        <span class="font-mono font-bold text-slate-800" id="cairNorek">-</span>
+                    </div>
+                    <div class="flex justify-between items-center text-xs">
+                        <span class="text-slate-500 font-semibold">Atas Nama Akun:</span>
+                        <span class="font-semibold text-slate-700" id="cairAtasNama">-</span>
+                    </div>
+                    <div class="pt-2 border-t border-slate-200 flex justify-between items-center">
+                        <span class="text-xs font-bold text-slate-700 uppercase">Jumlah Ditransfer:</span>
+                        <span class="text-lg font-black text-emerald-700" id="cairNominal">Rp 0</span>
+                    </div>
+                </div>
+
+                {{-- Upload Bukti Transfer --}}
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">
+                        Upload Bukti Transfer / Resi (Opsional)
+                    </label>
+                    <input type="file" name="bukti_transfer" accept="image/*"
+                        class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 border border-slate-200 rounded-xl p-1 cursor-pointer">
+                    <p class="text-[11px] text-slate-400 mt-1">
+                        Format JPG/PNG (M-Banking screenshot, resi DANA/Gopay). Jika dikosongkan, sistem otomatis membuat bukti transfer digital terverifikasi.
+                    </p>
+                </div>
+
+                {{-- Catatan Admin / No Referensi --}}
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">
+                        No. Referensi / Catatan Transfer
+                    </label>
+                    <input type="text" name="catatan_admin" placeholder="Contoh: Ref M-Banking #892819283 / Transfer DANA sukses"
+                        value="Dana berhasil ditransfer ke rekening nasabah."
+                        class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs outline-none focus:ring-2 focus:ring-emerald-500">
+                </div>
+
+                {{-- Action Buttons --}}
+                <div class="pt-3 flex items-center justify-end gap-3 border-t border-slate-100">
+                    <button type="button" onclick="closeCairkanModal()" class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition">
+                        Batal
+                    </button>
+                    <button type="submit" id="btnSubmitCair" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-xs font-bold shadow-lg shadow-emerald-700/20 transition flex items-center gap-1.5">
+                        <span>✔</span> Konfirmasi & Selesaikan Pencairan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {{-- ============================================================ --}}
+    {{-- MODAL 2: TOLAK PENCAIRAN DANA                                --}}
+    {{-- ============================================================ --}}
+    <div id="modalTolak" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs hidden p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full shadow-2xl border border-slate-200 overflow-hidden transform transition-all animate-in fade-in zoom-in-95">
+            <div class="p-6 bg-gradient-to-r from-rose-700 to-rose-900 text-white flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <span class="text-2xl">⚠️</span>
+                    <div>
+                        <h3 class="text-base font-bold">Tolak Permohonan Pencairan</h3>
+                        <p class="text-xs text-rose-200" id="tolakKode">SLS-XXXXXX</p>
+                    </div>
+                </div>
+                <button type="button" onclick="closeTolakModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-sm transition">
+                    ✕
+                </button>
+            </div>
+
+            <form id="formProsesTolak" method="POST" action="" class="p-6 space-y-4">
+                @csrf
+                <input type="hidden" name="action" value="tolak">
+
+                <div class="p-3 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-800 leading-relaxed">
+                    💡 <b>Perhatian:</b> Menolak permohonan ini akan secara otomatis <b>mengembalikan saldo tabungan Rp <span id="tolakNominal" class="font-bold">0</span></b> ke akun nasabah <b id="tolakNama">-</b>.
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">
+                        Alasan Penolakan <span class="text-rose-500">*</span>
+                    </label>
+                    <textarea name="catatan_admin" rows="3" required placeholder="Contoh: Nomor akun DANA tidak terdaftar atau nama pemilik rekening berbeda..."
+                        class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs outline-none focus:ring-2 focus:ring-rose-500">Nomor rekening/e-wallet tidak valid atau nama tidak sesuai.</textarea>
+                </div>
+
+                <div class="pt-3 flex items-center justify-end gap-3 border-t border-slate-100">
+                    <button type="button" onclick="closeTolakModal()" class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition">
+                        Batal
+                    </button>
+                    <button type="submit" class="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold shadow-lg shadow-rose-700/20 transition">
+                        Tolak & Kembalikan Saldo
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {{-- ============================================================ --}}
+    {{-- MODAL 3: LIHAT RESI / BUKTI TRANSFER DIGITAL RESMI           --}}
+    {{-- ============================================================ --}}
+    <div id="modalBukti" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs hidden p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full shadow-2xl border border-slate-200 overflow-hidden transform transition-all animate-in fade-in zoom-in-95">
+            
+            {{-- Struk Header --}}
+            <div class="p-6 bg-gradient-to-br from-emerald-900 to-teal-950 text-white text-center relative">
+                <button type="button" onclick="closeBuktiModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-sm transition">
+                    ✕
+                </button>
+                <img src="{{ asset('images/logo-circle.png') }}" alt="Logo" class="w-12 h-12 rounded-full border-2 border-emerald-400 mx-auto mb-2 object-cover shadow-md">
+                <h3 class="text-sm font-black uppercase tracking-wider text-emerald-300">Bank Sampah Bumi Sai Wawai</h3>
+                <p class="text-xs text-emerald-100 font-semibold mt-0.5">Bukti Resmi Pencairan Dana Nasabah</p>
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-[10px] font-bold mt-2">
+                    <span>✅</span> DANA BERHASIL DITRANSFER
+                </div>
+            </div>
+
+            {{-- Detail Struk --}}
+            <div class="p-6 space-y-4 text-xs">
+                <div class="border-b border-dashed border-slate-200 pb-3 space-y-1.5">
+                    <div class="flex justify-between">
+                        <span class="text-slate-400">Kode Transaksi</span>
+                        <span class="font-mono font-bold text-slate-800" id="resKode">-</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-400">Waktu Selesai</span>
+                        <span class="font-semibold text-slate-700" id="resTanggal">-</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-400">Penerima</span>
+                        <span class="font-bold text-slate-800" id="resNama">-</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-400">Bank / E-Wallet</span>
+                        <span class="font-bold text-blue-700" id="resBank">-</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-400">Nomor Rekening / HP</span>
+                        <span class="font-mono font-bold text-slate-800" id="resNorek">-</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-400">Atas Nama</span>
+                        <span class="font-semibold text-slate-700" id="resAtasNama">-</span>
+                    </div>
+                </div>
+
+                {{-- Nominal Besar --}}
+                <div class="p-3.5 bg-emerald-50 rounded-2xl border border-emerald-200 flex items-center justify-between">
+                    <div>
+                        <span class="text-[10px] font-bold text-emerald-800 uppercase tracking-wider block">Total Pencairan</span>
+                        <span class="text-xs text-slate-500">Bebas Biaya Admin</span>
+                    </div>
+                    <span class="text-xl font-black text-emerald-700" id="resNominal">Rp 0</span>
+                </div>
+
+                {{-- Catatan Admin --}}
+                <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-600">
+                    <p class="text-[10px] uppercase font-bold text-slate-400 mb-0.5">Catatan Transfer:</p>
+                    <p class="font-semibold text-slate-700 italic" id="resCatatan">-</p>
+                </div>
+
+                {{-- Lampiran Gambar Bukti jika ada --}}
+                <div id="resFotoContainer" class="hidden">
+                    <p class="text-[10px] uppercase font-bold text-slate-400 mb-1.5">Lampiran Foto Bukti Transfer:</p>
+                    <div class="rounded-xl overflow-hidden border border-slate-200 max-h-48">
+                        <img id="resFoto" src="" alt="Bukti Transfer" class="w-full object-contain">
+                    </div>
+                </div>
+
+                {{-- Close / Print Button --}}
+                <div class="pt-2 flex items-center gap-2">
+                    <button type="button" onclick="window.print()" class="flex-1 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition flex items-center justify-center gap-1.5">
+                        <span>🖨️</span> Cetak Resi
+                    </button>
+                    <button type="button" onclick="closeBuktiModal()" class="flex-1 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition">
+                        Tutup
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
 
     <script>
         // Instant search filter
@@ -271,6 +489,62 @@
                 row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
             });
         });
+
+        // Modal Cairkan
+        function openCairkanModal(id, kode, nama, bank, norek, atasNama, nominal) {
+            document.getElementById('formProsesCairkan').action = `/keuangan/penarikan-saldo/${id}/proses`;
+            document.getElementById('cairKode').innerText = kode;
+            document.getElementById('cairNama').innerText = nama;
+            document.getElementById('cairBank').innerText = bank;
+            document.getElementById('cairNorek').innerText = norek;
+            document.getElementById('cairAtasNama').innerText = atasNama;
+            document.getElementById('cairNominal').innerText = 'Rp ' + Number(nominal).toLocaleString('id-ID');
+            document.getElementById('modalCairkan').classList.remove('hidden');
+        }
+
+        function closeCairkanModal() {
+            document.getElementById('modalCairkan').classList.add('hidden');
+        }
+
+        // Modal Tolak
+        function openTolakModal(id, kode, nama, nominal) {
+            document.getElementById('formProsesTolak').action = `/keuangan/penarikan-saldo/${id}/proses`;
+            document.getElementById('tolakKode').innerText = kode;
+            document.getElementById('tolakNama').innerText = nama;
+            document.getElementById('tolakNominal').innerText = Number(nominal).toLocaleString('id-ID');
+            document.getElementById('modalTolak').classList.remove('hidden');
+        }
+
+        function closeTolakModal() {
+            document.getElementById('modalTolak').classList.add('hidden');
+        }
+
+        // Modal Lihat Bukti Resi
+        function openBuktiModal(kode, tanggal, nama, bank, norek, atasNama, nominal, catatan, buktiPath) {
+            document.getElementById('resKode').innerText = kode;
+            document.getElementById('resTanggal').innerText = tanggal;
+            document.getElementById('resNama').innerText = nama;
+            document.getElementById('resBank').innerText = bank;
+            document.getElementById('resNorek').innerText = norek;
+            document.getElementById('resAtasNama').innerText = atasNama;
+            document.getElementById('resNominal').innerText = 'Rp ' + Number(nominal).toLocaleString('id-ID');
+            document.getElementById('resCatatan').innerText = catatan || 'Dana berhasil ditransfer ke rekening nasabah.';
+
+            const fotoContainer = document.getElementById('resFotoContainer');
+            const fotoImg = document.getElementById('resFoto');
+            if (buktiPath && !buktiPath.startsWith('simulasi_')) {
+                fotoImg.src = `/storage/${buktiPath}`;
+                fotoContainer.classList.remove('hidden');
+            } else {
+                fotoContainer.classList.add('hidden');
+            }
+
+            document.getElementById('modalBukti').classList.remove('hidden');
+        }
+
+        function closeBuktiModal() {
+            document.getElementById('modalBukti').classList.add('hidden');
+        }
     </script>
 
 </body>
