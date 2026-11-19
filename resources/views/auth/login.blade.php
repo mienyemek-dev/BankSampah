@@ -119,59 +119,8 @@
         </p>
     </div>
 
-    {{-- Akun Demo Helper --}}
-    <div class="mt-6 pt-5 border-t border-slate-100">
-        <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
-            <svg class="w-3.5 h-3.5 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
-            </svg>
-            Klik untuk Mengisi Akun Demo Otomatis:
-        </p>
-        <div class="grid grid-cols-2 gap-2">
-            <button type="button" onclick="fillDemo('nasabah@saiwawai.id', 'password123')"
-                class="demo-btn text-left px-3 py-2 rounded-xl bg-slate-50 hover:bg-emerald-50 border border-slate-200/80 hover:border-emerald-300 transition-all group">
-                <div class="text-xs font-bold text-slate-700 group-hover:text-emerald-800 flex items-center gap-1.5">
-                    <span>👤</span> Nasabah
-                </div>
-                <div class="text-[10px] text-slate-400 group-hover:text-emerald-600">Akun Warga</div>
-            </button>
-
-            <button type="button" onclick="fillDemo('admin@saiwawai.id', 'password123')"
-                class="demo-btn text-left px-3 py-2 rounded-xl bg-slate-50 hover:bg-blue-50 border border-slate-200/80 hover:border-blue-300 transition-all group">
-                <div class="text-xs font-bold text-slate-700 group-hover:text-blue-800 flex items-center gap-1.5">
-                    <span>⚖️</span> Staf Admin
-                </div>
-                <div class="text-[10px] text-slate-400 group-hover:text-blue-600">Pengelola Depo</div>
-            </button>
-
-            <button type="button" onclick="fillDemo('keuangan@saiwawai.id', 'password123')"
-                class="demo-btn text-left px-3 py-2 rounded-xl bg-slate-50 hover:bg-amber-50 border border-slate-200/80 hover:border-amber-300 transition-all group">
-                <div class="text-xs font-bold text-slate-700 group-hover:text-amber-800 flex items-center gap-1.5">
-                    <span>💰</span> Keuangan
-                </div>
-                <div class="text-[10px] text-slate-400 group-hover:text-amber-600">Kas &amp; Saldo</div>
-            </button>
-
-            <button type="button" onclick="fillDemo('pimpinan@saiwawai.id', 'password123')"
-                class="demo-btn text-left px-3 py-2 rounded-xl bg-slate-50 hover:bg-purple-50 border border-slate-200/80 hover:border-purple-300 transition-all group">
-                <div class="text-xs font-bold text-slate-700 group-hover:text-purple-800 flex items-center gap-1.5">
-                    <span>👑</span> Pimpinan
-                </div>
-                <div class="text-[10px] text-slate-400 group-hover:text-purple-600">Manajer/Direktur</div>
-            </button>
-        </div>
-    </div>
-
     @push('scripts')
     <script>
-        function fillDemo(email, pass) {
-            document.getElementById('email').value = email;
-            document.getElementById('password').value = pass;
-            const btn = event.currentTarget;
-            btn.classList.add('ring-2', 'ring-emerald-500', 'ring-offset-1');
-            setTimeout(() => btn.classList.remove('ring-2', 'ring-emerald-500', 'ring-offset-1'), 700);
-        }
-
         const toggleBtn = document.getElementById('togglePassword');
         const passInput = document.getElementById('password');
         const eyeIcon = document.getElementById('eyeIcon');
