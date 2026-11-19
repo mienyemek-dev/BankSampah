@@ -52,6 +52,41 @@ class PublicController extends Controller
     }
 
     /**
+     * Halaman Arsip Semua Berita & Edukasi Publik
+     */
+    public function semuaBerita(Request $request)
+    {
+        $search = $request->query('cari');
+        $kategori = $request->query('kategori');
+
+        $query = BeritaEdukasi::with('penulis')
+            ->where('is_published', true);
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('judul', 'like', "%{$search}%")
+                  ->orWhere('ringkasan', 'like', "%{$search}%")
+                  ->orWhere('konten', 'like', "%{$search}%");
+            });
+        }
+
+        if ($kategori) {
+            $query->where('kategori', $kategori);
+        }
+
+        $beritaList = $query->latest('created_at')->paginate(9)->withQueryString();
+
+        $kategoriList = BeritaEdukasi::where('is_published', true)
+            ->distinct()
+            ->pluck('kategori')
+            ->filter();
+
+        $totalSemuaBerita = BeritaEdukasi::where('is_published', true)->count();
+
+        return view('public.berita_index', compact('beritaList', 'kategoriList', 'totalSemuaBerita', 'search', 'kategori'));
+    }
+
+    /**
      * Detail artikel edukasi
      */
     public function detailArtikel($slug)

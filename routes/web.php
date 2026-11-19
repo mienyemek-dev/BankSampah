@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 // PUBLIC ROUTES (tanpa autentikasi)
 // ==========================================
 Route::get('/', [PublicController::class, 'landingPage'])->name('home');
+Route::get('/berita', [PublicController::class, 'semuaBerita'])->name('berita.index');
 Route::get('/artikel/{slug}', [PublicController::class, 'detailArtikel'])->name('artikel.show');
 
 // Guest Routes (Login & Registrasi)

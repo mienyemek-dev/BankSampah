@@ -46,7 +46,7 @@
             <span class="text-sm font-bold text-gray-900 hidden sm:block">Bank Sampah Bumi Sai Wawai</span>
         </a>
         <div class="flex items-center gap-3">
-            <a href="{{ route('home') }}#berita" class="text-sm text-gray-500 hover:text-emerald-700 transition">← Semua Artikel</a>
+            <a href="{{ route('berita.index') }}" class="text-sm font-semibold text-slate-600 hover:text-emerald-700 transition">← Semua Artikel & Berita</a>
             @guest
             <a href="{{ route('register') }}" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-xl transition">Daftar</a>
             @else

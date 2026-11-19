@@ -897,10 +897,15 @@
 @if($beritaEdukasi->count() > 0)
 <section id="berita" class="py-20 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-14 fade-in">
-            <span class="text-brand-600 font-semibold text-sm uppercase tracking-wider">Wawasan & Inspirasi</span>
-            <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mt-2 mb-4">Berita & Edukasi</h2>
-            <p class="text-gray-500 max-w-xl mx-auto">Pelajari cara memilah sampah yang benar dan manfaat daur ulang untuk lingkunganmu.</p>
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-14 fade-in">
+            <div class="text-center sm:text-left">
+                <span class="text-brand-600 font-semibold text-sm uppercase tracking-wider">Wawasan & Inspirasi</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mt-2 mb-2">Berita & Edukasi Warga</h2>
+                <p class="text-gray-500 max-w-xl">Pelajari cara memilah sampah yang benar dan warta kegiatan Bank Sampah Bumi Sai Wawai.</p>
+            </div>
+            <a href="{{ route('berita.index') }}" class="px-5 py-2.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-extrabold text-xs sm:text-sm rounded-2xl border border-emerald-200 transition shadow-xs flex items-center gap-2 whitespace-nowrap">
+                <span>Lihat Semua Berita</span> &rarr;
+            </a>
         </div>
 
         <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -959,6 +964,14 @@
                 </div>
             </article>
             @endforeach
+        </div>
+
+        {{-- Banner Bawah: Tombol ke Seluruh Arsip Berita --}}
+        <div class="mt-12 text-center fade-in">
+            <a href="{{ route('berita.index') }}" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs sm:text-sm shadow-lg shadow-emerald-700/20 transition transform hover:-translate-y-0.5">
+                <span>📰 Jelajahi Seluruh Arsip Berita & Panduan Edukasi</span>
+                <span>&rarr;</span>
+            </a>
         </div>
     </div>
 </section>
