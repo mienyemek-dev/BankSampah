@@ -142,7 +142,8 @@ class NasabahController extends Controller
     public function jemputSampahIndex()
     {
         $user = Auth::user();
-        $riwayatJemput = PermohonanJemput::where('id_user', $user->id_user)
+        $riwayatJemput = PermohonanJemput::with('petugas')
+            ->where('id_user', $user->id_user)
             ->latest('created_at')
             ->paginate(10);
 

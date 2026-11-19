@@ -142,6 +142,19 @@
                                                 {{ ucfirst($j->status_jemput) }}
                                             </span>
                                         @endif
+
+                                        @if ($j->petugas)
+                                            <div class="mt-1.5 flex items-center gap-1 text-[11px] font-semibold text-slate-700">
+                                                <span>🛵 Driver:</span>
+                                                <span class="text-emerald-700 font-bold">{{ $j->petugas->nama_lengkap }}</span>
+                                            </div>
+                                        @endif
+
+                                        @if ($j->catatan_petugas)
+                                            <p class="text-[10px] text-slate-500 italic mt-0.5">
+                                                "{{ $j->catatan_petugas }}"
+                                            </p>
+                                        @endif
                                     </td>
                                 </tr>
                             @empty
