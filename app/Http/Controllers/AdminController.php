@@ -178,10 +178,51 @@ class AdminController extends Controller
     /**
      * Manajemen Data Nasabah
      */
-    public function nasabahIndex()
+    public function nasabahIndex(Request $request)
     {
-        $nasabahList = User::where('role', 'nasabah')->latest('created_at')->paginate(15);
-        return view('admin.nasabah_index', compact('nasabahList'));
+        $status = $request->query('status');
+
+        $query = User::where('role', 'nasabah');
+        if ($status && in_array($status, ['pending', 'aktif', 'ditolak'])) {
+            $query->where('status_akun', $status);
+        }
+
+        $nasabahList = $query->latest('created_at')->paginate(15)->withQueryString();
+
+        $totalNasabah = User::where('role', 'nasabah')->count();
+        $totalPending = User::where('role', 'nasabah')->where('status_akun', 'pending')->count();
+        $totalAktif   = User::where('role', 'nasabah')->where('status_akun', 'aktif')->count();
+        $totalDitolak = User::where('role', 'nasabah')->where('status_akun', 'ditolak')->count();
+
+        return view('admin.nasabah_index', compact(
+            'nasabahList',
+            'totalNasabah',
+            'totalPending',
+            'totalAktif',
+            'totalDitolak',
+            'status'
+        ));
+    }
+
+    public function nasabahVerifikasi(Request $request, $id_user)
+    {
+        $nasabah = User::where('role', 'nasabah')->findOrFail($id_user);
+
+        $validated = $request->validate([
+            'status_akun' => ['required', 'in:aktif,ditolak'],
+            'alasan_penolakan' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $nasabah->update([
+            'status_akun' => $validated['status_akun'],
+            'alasan_penolakan' => ($validated['status_akun'] === 'ditolak') ? ($validated['alasan_penolakan'] ?? 'Data identitas belum memenuhi syarat') : null,
+        ]);
+
+        $pesan = ($validated['status_akun'] === 'aktif') 
+            ? "Akun nasabah {$nasabah->nama_lengkap} ({$nasabah->email}) berhasil DISETUJUI dan diaktifkan!" 
+            : "Pendaftaran akun nasabah {$nasabah->nama_lengkap} telah DITOLAK.";
+
+        return back()->with('success', $pesan);
     }
 
     /**

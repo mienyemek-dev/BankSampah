@@ -82,6 +82,7 @@ Route::middleware('auth')->group(function () {
 
         // Manajemen Nasabah
         Route::get('/nasabah', [AdminController::class, 'nasabahIndex'])->name('nasabah');
+        Route::post('/nasabah/{id_user}/verifikasi', [AdminController::class, 'nasabahVerifikasi'])->name('nasabah.verifikasi');
 
         // Manajemen Jemput Bentor
         Route::get('/jemput-bentor', [AdminController::class, 'jemputIndex'])->name('jemput');
