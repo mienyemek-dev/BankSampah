@@ -239,9 +239,9 @@
             </div>
 
             {{-- ======================================================== --}}
-            {{-- 4 KARTU STATISTIK OPERASIONAL (BENTO CLEAN DESIGN)       --}}
+            {{-- 5 KARTU STATISTIK OPERASIONAL (BENTO CLEAN DESIGN)       --}}
             {{-- ======================================================== --}}
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
                 
                 {{-- 1. Total Nasabah --}}
                 <a href="{{ route('admin.nasabah') }}" 
@@ -278,7 +278,25 @@
                     </div>
                 </div>
 
-                {{-- 3. Antrean Jemput Bentor --}}
+                {{-- 3. Stok Sampah di Depo (Siap Jual ke Pengepul) --}}
+                <a href="{{ route('admin.penjualan_pengepul') }}" 
+                   class="bg-white p-5 rounded-3xl border border-slate-200/90 shadow-sm hover:shadow-md hover:border-blue-500 hover:-translate-y-1 transition duration-200 block group">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Stok di Depo</span>
+                        <div class="w-9 h-9 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center text-sm font-bold group-hover:scale-110 transition">
+                            📦
+                        </div>
+                    </div>
+                    <h3 class="text-2xl sm:text-3xl font-extrabold text-amber-700 mt-2 tracking-tight">
+                        {{ number_format($totalStokGudang, 1) }} <span class="text-xs font-semibold text-slate-500">Kg</span>
+                    </h3>
+                    <div class="mt-3 flex items-center justify-between text-xs">
+                        <span class="text-[11px] text-slate-500">Siap Dijual ke Pabrik</span>
+                        <span class="text-blue-600 font-bold group-hover:translate-x-1 transition-transform">&rarr;</span>
+                    </div>
+                </a>
+
+                {{-- 4. Antrean Jemput Bentor --}}
                 <a href="{{ route('admin.jemput') }}" 
                    class="bg-white p-5 rounded-3xl border border-slate-200/90 shadow-sm hover:shadow-md hover:border-amber-500 hover:-translate-y-1 transition duration-200 block group">
                     <div class="flex items-center justify-between">
@@ -298,7 +316,7 @@
                     </div>
                 </a>
 
-                {{-- 4. Komoditas Sampah Aktif --}}
+                {{-- 5. Komoditas Sampah Aktif --}}
                 <a href="{{ route('admin.harga_sampah') }}" 
                    class="bg-white p-5 rounded-3xl border border-slate-200/90 shadow-sm hover:shadow-md hover:border-emerald-500 hover:-translate-y-1 transition duration-200 block group">
                     <div class="flex items-center justify-between">
@@ -311,7 +329,7 @@
                         {{ $totalKomoditas }} <span class="text-xs font-semibold text-slate-500">Jenis</span>
                     </h3>
                     <div class="mt-3 flex items-center justify-between text-xs">
-                        <span class="text-[11px] text-slate-500">Plastik, Kertas, Logam, Jelantah</span>
+                        <span class="text-[11px] text-slate-500">Plastik, Kertas, Logam</span>
                         <span class="text-purple-600 font-bold group-hover:translate-x-1 transition-transform">&rarr;</span>
                     </div>
                 </a>

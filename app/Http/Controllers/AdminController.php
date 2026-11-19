@@ -37,6 +37,11 @@ class AdminController extends Controller
             ->whereYear('tanggal_setor', date('Y'))
             ->sum('total_berat');
 
+        // Total Sisa Stok Sampah di Gudang Depo (Masuk - Terjual ke Pabrik)
+        $totalMasukSemua = TransaksiSetor::sum('total_berat');
+        $totalKeluarSemua = PenjualanPengepul::sum('total_berat');
+        $totalStokGudang = max(0, (float)$totalMasukSemua - (float)$totalKeluarSemua);
+
         $transaksiTerbaru = TransaksiSetor::with(['nasabah', 'details.sampah'])
             ->latest('tanggal_setor')
             ->take(8)
@@ -55,6 +60,7 @@ class AdminController extends Controller
             'totalSetorHariIni',
             'totalBeratHariIni',
             'totalBeratBulanIni',
+            'totalStokGudang',
             'transaksiTerbaru', 
             'jemputTerbaru'
         ));
@@ -275,10 +281,31 @@ class AdminController extends Controller
      */
     public function penjualanPengepulIndex()
     {
-        $sampahList = Sampah::all();
+        $sampahList = Sampah::with(['kategori'])->get()->map(function ($s) {
+            $masuk = DetailTransaksiSetor::where('id_sampah', $s->id_sampah)->sum('jumlah_satuan');
+            $keluar = DetailPenjualanPengepul::where('id_sampah', $s->id_sampah)->sum('berat_satuan');
+            $s->total_masuk = (float) $masuk;
+            $s->total_keluar = (float) $keluar;
+            $s->stok_saat_ini = max(0, $s->total_masuk - $s->total_keluar);
+            $s->estimasi_nilai = $s->stok_saat_ini * (float) $s->harga_jual_pengepul;
+            return $s;
+        });
+
+        $totalStokKg = $sampahList->sum('stok_saat_ini');
+        $totalEstimasiPendapatan = $sampahList->sum('estimasi_nilai');
+        $totalPenjualanSukses = PenjualanPengepul::sum('total_pendapatan');
+        $totalBeratTerjual = PenjualanPengepul::sum('total_berat');
+
         $penjualanList = PenjualanPengepul::with(['admin', 'details.sampah'])->latest('tanggal_penjualan')->paginate(10);
 
-        return view('admin.penjualan_pengepul_index', compact('sampahList', 'penjualanList'));
+        return view('admin.penjualan_pengepul_index', compact(
+            'sampahList', 
+            'penjualanList', 
+            'totalStokKg', 
+            'totalEstimasiPendapatan', 
+            'totalPenjualanSukses',
+            'totalBeratTerjual'
+        ));
     }
 
     public function penjualanPengepulStore(Request $request)
@@ -287,9 +314,13 @@ class AdminController extends Controller
             'nama_pabrik_pengepul' => ['required', 'string', 'max:150'],
             'tanggal_penjualan' => ['required', 'date'],
             'id_sampah' => ['required', 'exists:sampah,id_sampah'],
-            'berat_jual' => ['required', 'numeric', 'min:1'],
+            'berat_jual' => ['required', 'numeric', 'min:0.1'],
             'harga_jual_satuan' => ['required', 'numeric', 'min:1'],
             'catatan' => ['nullable', 'string'],
+        ], [
+            'nama_pabrik_pengepul.required' => 'Nama pabrik atau pengepul wajib diisi.',
+            'id_sampah.required' => 'Pilih jenis komoditas sampah yang dijual.',
+            'berat_jual.min' => 'Berat yang dijual minimal 0.1 Kg.',
         ]);
 
         $subtotal = $validated['berat_jual'] * $validated['harga_jual_satuan'];
@@ -316,7 +347,7 @@ class AdminController extends Controller
             ]);
         });
 
-        return back()->with('success', 'Penjualan sampah ke pabrik/pengepul berhasil dicatat! Pendapatan kas masuk: Rp ' . number_format($subtotal, 0, ',', '.'));
+        return back()->with('success', 'Penjualan sampah ke pabrik/pengepul berhasil dicatat! Kas masuk: Rp ' . number_format($subtotal, 0, ',', '.'));
     }
 
     /**
