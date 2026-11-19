@@ -140,7 +140,7 @@
                                 <option value="" data-harga="0" data-stok="0" data-satuan="Kg">-- Pilih Komoditas --</option>
                                 @foreach ($sampahList as $s)
                                     <option value="{{ $s->id_sampah }}" 
-                                        data-harga="{{ $s->harga_jual_pengepul }}"
+                                        data-harga="{{ (int) $s->harga_jual_pengepul }}"
                                         data-stok="{{ $s->stok_saat_ini }}"
                                         data-satuan="{{ $s->satuan }}"
                                         {{ (old('id_sampah', $selectedSampahId) == $s->id_sampah) ? 'selected' : '' }}>
@@ -175,7 +175,7 @@
                                     <span>Harga Pabrik (Rp) *</span>
                                     <span class="text-[10px] text-emerald-600 font-semibold">Bisa Nego</span>
                                 </label>
-                                <input type="number" step="50" min="1" name="harga_jual_satuan" id="hargaJual" value="{{ old('harga_jual_satuan', 0) }}" oninput="calcTotal()" required
+                                <input type="number" step="any" min="1" name="harga_jual_satuan" id="hargaJual" value="{{ old('harga_jual_satuan', 0) }}" oninput="calcTotal()" required
                                     class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs outline-none focus:ring-2 focus:ring-emerald-500">
                             </div>
                         </div>
@@ -287,10 +287,10 @@
 
             currentAvailableStock = stok;
             
-            // Hanya update harga jika input belum diisi user atau bernilai 0
+            // Set harga otomatis dari master komoditas
             const hargaInput = document.getElementById('hargaJual');
-            if (!hargaInput.value || parseFloat(hargaInput.value) === 0) {
-                hargaInput.value = harga;
+            if (sel.value) {
+                hargaInput.value = Math.round(parseFloat(harga)) || 0;
             }
 
             document.getElementById('lblUnit').innerText = satuan;

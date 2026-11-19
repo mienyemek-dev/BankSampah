@@ -69,11 +69,11 @@
                                     <form method="POST" action="{{ route('admin.harga_sampah.update', $s->id_sampah) }}">
                                         @csrf
                                         <td class="p-3">
-                                            <input type="number" name="harga_beli_nasabah" value="{{ (int)$s->harga_beli_nasabah }}" step="100"
+                                            <input type="number" name="harga_beli_nasabah" value="{{ (int)$s->harga_beli_nasabah }}" step="any" min="0"
                                                 class="w-28 px-2.5 py-1.5 rounded-lg border border-slate-200 text-xs font-bold text-emerald-700 outline-none focus:ring-2 focus:ring-emerald-500">
                                         </td>
                                         <td class="p-3">
-                                            <input type="number" name="harga_jual_pengepul" value="{{ (int)$s->harga_jual_pengepul }}" step="100"
+                                            <input type="number" name="harga_jual_pengepul" value="{{ (int)$s->harga_jual_pengepul }}" step="any" min="0"
                                                 class="w-28 px-2.5 py-1.5 rounded-lg border border-slate-200 text-xs font-bold text-slate-700 outline-none focus:ring-2 focus:ring-emerald-500">
                                         </td>
                                         <td class="p-3">
