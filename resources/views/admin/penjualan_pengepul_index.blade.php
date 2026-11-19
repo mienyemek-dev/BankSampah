@@ -36,6 +36,12 @@
                 </div>
             @endif
 
+            @if (session('error'))
+                <div class="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-sm flex items-center gap-2 mb-6 shadow-sm">
+                    <span>⚠️</span><span class="font-semibold">{{ session('error') }}</span>
+                </div>
+            @endif
+
             @if ($errors->any())
                 <div class="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-sm mb-6 shadow-sm">
                     <div class="font-bold flex items-center gap-1.5 mb-1.5">
@@ -236,12 +242,20 @@
                                 <input type="number" step="0.1" min="0.1" name="berat_jual" id="beratJual" value="" oninput="calcTotal()" required
                                     placeholder="0.0"
                                     class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs outline-none focus:ring-2 focus:ring-emerald-500">
+                                <p id="errStok" class="text-[11px] font-bold text-rose-500 mt-1 hidden"></p>
                             </div>
                             <div>
-                                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Harga Pabrik (Rp) <span class="text-rose-500">*</span></label>
+                                <label class="block text-xs font-bold text-slate-700 uppercase mb-1 flex items-center justify-between">
+                                    <span>Harga Pabrik (Rp) *</span>
+                                    <span class="text-[10px] text-slate-400 font-normal">Dari Master</span>
+                                </label>
                                 <input type="number" step="50" min="1" name="harga_jual_satuan" id="hargaJual" value="0" oninput="calcTotal()" required
                                     class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs outline-none focus:ring-2 focus:ring-emerald-500">
                             </div>
+                        </div>
+
+                        <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 text-[11px] text-slate-500 leading-relaxed">
+                            💡 <b>Info Harga:</b> Harga otomatis diisi dari <i>Master Harga</i>. Jika terjadi fluktuasi pasar atau tawar-menawar khusus dengan pabrik, Anda tetap dapat menyesuaikan nominal harga per kilogramnya.
                         </div>
 
                         <div>
@@ -381,8 +395,28 @@
         }
 
         function calcTotal() {
-            const qty   = parseFloat(document.getElementById('beratJual').value) || 0;
+            const beratInput = document.getElementById('beratJual');
+            const qty   = parseFloat(beratInput.value) || 0;
             const price = parseFloat(document.getElementById('hargaJual').value) || 0;
+            const errEl = document.getElementById('errStok');
+            const btn   = document.getElementById('btnSubmitJual');
+            const sel   = document.getElementById('selectSampah');
+            const satuan = sel.options[sel.selectedIndex]?.getAttribute('data-satuan') || 'Kg';
+
+            // Validasi apakah melebihi stok yang ada
+            if (sel.value && qty > currentAvailableStock) {
+                errEl.innerText = `❌ Melebihi stok! Maksimal yang tersedia: ${currentAvailableStock.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} ${satuan}`;
+                errEl.classList.remove('hidden');
+                beratInput.classList.add('border-rose-500', 'bg-rose-50');
+                btn.disabled = true;
+                btn.classList.add('opacity-50', 'cursor-not-allowed');
+            } else {
+                errEl.classList.add('hidden');
+                beratInput.classList.remove('border-rose-500', 'bg-rose-50');
+                btn.disabled = false;
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+
             const total = qty * price;
             document.getElementById('totalPendapatan').innerText = 'Rp ' + Math.round(total).toLocaleString('id-ID');
         }

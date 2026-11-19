@@ -323,6 +323,17 @@ class AdminController extends Controller
             'berat_jual.min' => 'Berat yang dijual minimal 0.1 Kg.',
         ]);
 
+        $sampah = Sampah::findOrFail($validated['id_sampah']);
+
+        // Validasi ketersediaan stok riil di gudang depo
+        $masuk = DetailTransaksiSetor::where('id_sampah', $sampah->id_sampah)->sum('jumlah_satuan');
+        $keluar = DetailPenjualanPengepul::where('id_sampah', $sampah->id_sampah)->sum('berat_satuan');
+        $stokTersedia = max(0, (float) $masuk - (float) $keluar);
+
+        if ($validated['berat_jual'] > $stokTersedia) {
+            return back()->withInput()->with('error', "Stok tidak mencukupi! Anda mencoba menjual {$validated['berat_jual']} {$sampah->satuan}, padahal sisa stok {$sampah->nama_sampah} di depo saat ini hanya " . number_format($stokTersedia, 1, ',', '.') . " {$sampah->satuan}.");
+        }
+
         $subtotal = $validated['berat_jual'] * $validated['harga_jual_satuan'];
         $kodePenjualan = 'SLS-' . date('Ymd') . '-' . strtoupper(Str::random(5));
 
